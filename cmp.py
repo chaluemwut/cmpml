@@ -21,8 +21,9 @@ data_size = [0.25, 0.50, 0.75]
 
 class CmpMl(object):
     
-    def __init__(self, ml_name):
+    def __init__(self, ml_name, dataset_name):
         self.ml_name = ml_name
+        self.dataset_name = dataset_name
     
     def load_dataset(self):
         loader = DataSetLoader()
@@ -145,8 +146,7 @@ class CmpMl(object):
                 log.info('end cross val')
                 score_lst.append(scores.mean())
             except Exception as e:
-                print e
-#                 log.info(str(e))       
+                log.info(str(e))       
         np_score = np.array(score_lst)
         max_idx = np_score.argmax()
         return ml_lst[max_idx]
@@ -208,7 +208,48 @@ class CmpMl(object):
                 all_data_rec.append(data_rec)
             result[dataset_name] = all_data_rec
         pickle.dump(result, open('result/{}.obj'.format(self.ml_name), 'wb'))
-                
+
+    def process_dataset(self):
+        dataset_lst = self.load_dataset()
+        result = {}
+        log.info('***** start ' + self.dataset_name)
+        data_value = dataset_lst[self.dataset_name]
+        x_data = data_value[0]
+        y_data = data_value[1]
+        all_data_rec = []
+        for i in range(0, Config.reperating_loop):
+            log.info('*********** loop : '+i)
+            ran_num = random.randint(1, 100)
+            x_train_org, x_test_org, y_train_org, y_test_org = train_test_split(x_data, y_data, test_size=0.25, random_state=ran_num)
+            data_rec = []
+            for d_size in data_size:
+                ran_num = random.randint(1, 100)
+                if d_size == 0.25:
+                    x_train = copy.deepcopy(x_train_org)
+                    y_train = copy.deepcopy(y_train_org)
+                elif d_size == 0.5:
+                    x_train, x_bank, y_train, y_bank = train_test_split(x_train_org, y_train_org, test_size=0.333, random_state=ran_num)
+                elif d_size == 0.75:
+                    x_train, x_bank, y_train, y_bank = train_test_split(x_train_org, y_train_org, test_size=0.666, random_state=ran_num)
+                    
+                ml_lst = self.gen_ml_lst(d_size, self.dataset_name)[self.ml_name]
+                ml_cross = self.cross_validation(ml_lst, x_train, y_train)
+                ml_new_train = self.copy_model(ml_cross)
+                ml_c = copy.deepcopy(ml_new_train)
+                ml_c.fit(x_train, y_train)
+                start = time.time()
+                y_pred = ml_c.predict(x_test_org)
+                total_time = time.time() - start
+                acc = accuracy_score(y_test_org, y_pred)
+                fsc = f1_score(y_test_org, y_pred)
+                data_rec.append(acc)
+                data_rec.append(fsc)
+                data_rec.append(total_time)
+                data_rec.append(len(y_pred))
+            all_data_rec.append(data_rec)
+        result[self.dataset_name] = all_data_rec
+        pickle.dump(result, open('result/{}_{}.obj'.format(self.ml_name, self.dataset_name), 'wb'))
+        log.info('************** end ')               
         
 
 def initlog():
@@ -221,13 +262,14 @@ def initlog():
     fh.setFormatter(format)
     log.addHandler(fh)
       
-def maincmp(ml_name):
+def maincmp(ml_name, dataset_name):
     initlog()
     log.info('start')
-    cmpml = CmpMl(ml_name)
-    cmpml.process()
+    cmpml = CmpMl(ml_name, dataset_name)
+    cmpml.process_dataset()
     log.info('end')
 
 if __name__ == '__main__':
     ml_name = sys.argv[1]
-    maincmp(ml_name)
+    dataset_name = sys.argv[2]
+    maincmp(ml_name, dataset_name)
