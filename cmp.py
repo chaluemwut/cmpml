@@ -182,10 +182,13 @@ class CmpMl(object):
                 data_rec = []
                 for d_size in data_size:
                     ran_num = random.randint(1, 100)
-                    if d_size == 0.5:
+                    if d_size == 0.25:
+                        x_train, y_train = x_train_org, y_train_org
+                    elif d_size == 0.5:
                         x_train, x_bank, y_train, y_bank = train_test_split(x_train_org, x_train_org, test_size=0.333, random_state=ran_num)
                     elif d_size == 0.75:
                         x_train, x_bank, y_train, y_bank = train_test_split(x_train_org, x_train_org, test_size=0.666, random_state=ran_num)
+                        
                     ml_lst = self.gen_ml_lst(d_size, dataset_name)[self.ml_name]
                     ml_cross = self.cross_validation(ml_lst, x_train, y_train)
                     ml_new_train = self.copy_model(ml_cross)
