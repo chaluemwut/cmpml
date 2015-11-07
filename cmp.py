@@ -1,4 +1,4 @@
-import logging, sys, random, copy, pickle
+import logging, sys, random, copy, pickle, time
 from dataset_loader import DataSetLoader
 from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import RandomForestClassifier, BaggingClassifier, AdaBoostClassifier
@@ -178,25 +178,28 @@ class CmpMl(object):
             all_data_rec = []
             for i in range(0, Config.reperating_loop):
                 ran_num = random.randint(1, 100)
-                x_train, x_test, y_train, y_test = train_test_split(x_data, y_data, test_size=0.25, random_state=ran_num)
+                x_train_org, x_test_org, y_train_org, y_test_org = train_test_split(x_data, y_data, test_size=0.25, random_state=ran_num)
                 data_rec = []
                 for d_size in data_size:
                     ran_num = random.randint(1, 100)
                     if d_size == 0.5:
-                        x_train, x_bank, y_train, y_bank = train_test_split(x_train, y_train, test_size=0.333, random_state=ran_num)
+                        x_train, x_bank, y_train, y_bank = train_test_split(x_train_org, x_train_org, test_size=0.333, random_state=ran_num)
                     elif d_size == 0.75:
-                        x_train, x_bank, y_train, y_bank = train_test_split(x_train, y_train, test_size=0.666, random_state=ran_num)
+                        x_train, x_bank, y_train, y_bank = train_test_split(x_train_org, x_train_org, test_size=0.666, random_state=ran_num)
                     ml_lst = self.gen_ml_lst(d_size, dataset_name)[self.ml_name]
                     ml_cross = self.cross_validation(ml_lst, x_train, y_train)
                     ml_new_train = self.copy_model(ml_cross)
                     ml_c = copy.deepcopy(ml_new_train)
                     ml_c.fit(x_train, y_train)
-                    y_pred = ml_c.predict(x_test)
-                    acc = accuracy_score(y_test, y_pred)
-                    fsc = f1_score(y_test, y_pred)
+                    start = time.time()
+                    y_pred = ml_c.predict(x_test_org)
+                    total_time = time.time() - start
+                    acc = accuracy_score(y_test_org, y_pred)
+                    fsc = f1_score(y_test_org, y_pred)
                     data_rec.append(acc)
                     data_rec.append(fsc)
-                    data_rec.append(ml_c)
+                    data_rec.append(total_time)
+                    data_rec.append(len(y_pred))
                 all_data_rec.append(data_rec)
             result[dataset_name] = all_data_rec
         pickle.dump(result, open('result/{}.obj'.format(self.ml_name), 'wb'))
