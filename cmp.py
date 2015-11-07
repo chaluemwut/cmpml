@@ -145,7 +145,8 @@ class CmpMl(object):
                 log.info('end cross val')
                 score_lst.append(scores.mean())
             except Exception as e:
-                log.info(str(e))       
+                print e
+#                 log.info(str(e))       
         np_score = np.array(score_lst)
         max_idx = np_score.argmax()
         return ml_lst[max_idx]
@@ -183,11 +184,12 @@ class CmpMl(object):
                 for d_size in data_size:
                     ran_num = random.randint(1, 100)
                     if d_size == 0.25:
-                        x_train, y_train = x_train_org, y_train_org
+                        x_train = copy.deepcopy(x_train_org)
+                        y_train = copy.deepcopy(y_train_org)
                     elif d_size == 0.5:
-                        x_train, x_bank, y_train, y_bank = train_test_split(x_train_org, x_train_org, test_size=0.333, random_state=ran_num)
+                        x_train, x_bank, y_train, y_bank = train_test_split(x_train_org, y_train_org, test_size=0.333, random_state=ran_num)
                     elif d_size == 0.75:
-                        x_train, x_bank, y_train, y_bank = train_test_split(x_train_org, x_train_org, test_size=0.666, random_state=ran_num)
+                        x_train, x_bank, y_train, y_bank = train_test_split(x_train_org, y_train_org, test_size=0.666, random_state=ran_num)
                         
                     ml_lst = self.gen_ml_lst(d_size, dataset_name)[self.ml_name]
                     ml_cross = self.cross_validation(ml_lst, x_train, y_train)
@@ -211,9 +213,8 @@ class CmpMl(object):
 
 def initlog():
     log.setLevel(logging.DEBUG)
-    format = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     ch = logging.StreamHandler(sys.stdout)
-    ch.setFormatter(format)
+    ch.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
     log.addHandler(ch) 
     fh = logging.FileHandler('log/result.log')
     fh.setFormatter(format)
