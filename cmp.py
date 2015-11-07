@@ -214,7 +214,8 @@ class CmpMl(object):
 def initlog():
     log.setLevel(logging.DEBUG)
     ch = logging.StreamHandler(sys.stdout)
-    ch.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
+    format = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    ch.setFormatter(format)
     log.addHandler(ch) 
     fh = logging.FileHandler('log/result.log')
     fh.setFormatter(format)
@@ -228,5 +229,5 @@ def maincmp(ml_name):
     log.info('end')
 
 if __name__ == '__main__':
-    ml_name = sys.argv[1]
+    ml_name = 'nb'#sys.argv[1]
     maincmp(ml_name)
