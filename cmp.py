@@ -229,5 +229,5 @@ def maincmp(ml_name):
     log.info('end')
 
 if __name__ == '__main__':
-    ml_name = 'nb'#sys.argv[1]
+    ml_name = sys.argv[1]
     maincmp(ml_name)
