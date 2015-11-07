@@ -218,7 +218,7 @@ class CmpMl(object):
         y_data = data_value[1]
         all_data_rec = []
         for i in range(0, Config.reperating_loop):
-            log.info('*********** loop : '+i)
+            log.info('*********** loop : {}'.format(i))
             ran_num = random.randint(1, 100)
             x_train_org, x_test_org, y_train_org, y_test_org = train_test_split(x_data, y_data, test_size=0.25, random_state=ran_num)
             data_rec = []
