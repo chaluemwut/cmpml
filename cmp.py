@@ -176,7 +176,7 @@ class CmpMl(object):
         elif self.ml_name == 'randomforest':
             return ml_org.n_estimators
         elif self.ml_name == 'knn':
-            return KNeighborsClassifier(n_neighbors=ml_org.n_neighbors)
+            return ml_org.n_neighbors
         elif self.ml_name == 'svm':
             params = ml_org.get_params()
             return 'kernel = {} degree'.format(params['kernel'], params['degree'])
