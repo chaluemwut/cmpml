@@ -167,6 +167,19 @@ class CmpMl(object):
         elif self.ml_name == 'svm':
             params = ml_org.get_params()
             return LibSVMWrapper(kernel=params['kernel'], degree=params['degree'])
+        
+    def get_model_parameter(self, ml_org):
+        if self.ml_name == 'bagging':
+            return ml_org.n_estimators
+        elif self.ml_name == 'boosted':
+            return ml_org.n_estimators
+        elif self.ml_name == 'randomforest':
+            return ml_org.n_estimators
+        elif self.ml_name == 'knn':
+            return KNeighborsClassifier(n_neighbors=ml_org.n_neighbors)
+        elif self.ml_name == 'svm':
+            params = ml_org.get_params()
+            return 'kernel = {} degree'.format(params['kernel'], params['degree'])
      
     def process(self):
         dataset_lst = self.load_dataset()
@@ -205,6 +218,7 @@ class CmpMl(object):
                     data_rec.append(fsc)
                     data_rec.append(total_time)
                     data_rec.append(len(y_pred))
+                    data_rec.append(self.get_model_parameter(ml_c))
                 all_data_rec.append(data_rec)
             result[dataset_name] = all_data_rec
         pickle.dump(result, open('result/{}.obj'.format(self.ml_name), 'wb'))
@@ -246,6 +260,7 @@ class CmpMl(object):
                 data_rec.append(fsc)
                 data_rec.append(total_time)
                 data_rec.append(len(y_pred))
+                data_rec.append(self.get_model_parameter(ml_c))
             all_data_rec.append(data_rec)
         result[self.dataset_name] = all_data_rec
         pickle.dump(result, open('result/{}_{}.obj'.format(self.ml_name, self.dataset_name), 'wb'))
