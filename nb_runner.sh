@@ -1,3 +1,3 @@
 #!/bin/sh
-python cmp.py bagging heart &
-python cmp.py bagging letter &
+python cmp.py bagging nb &
+python cmp.py bagging decsiontree &
