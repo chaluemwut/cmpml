@@ -218,6 +218,7 @@ class CmpMl(object):
                     data_rec.append(fsc)
                     data_rec.append(total_time)
                     data_rec.append(len(y_pred))
+                    data_rec.append(1)
                 all_data_rec.append(data_rec)
             result[dataset_name] = all_data_rec
         pickle.dump(result, open('result/{}.obj'.format(self.ml_name), 'wb'))

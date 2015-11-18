@@ -74,10 +74,10 @@ def print_nb(ml_name):
         print np.mean(data_lst[:, 8]), ',', np.mean(data_lst[:, 9])
               
 if __name__ == '__main__':
-    print_result('bagging')
+#     print_result('bagging')
 #     print_result('boosted')
 #     print_result('randomforest')
 #     print_result('svm')
 #     print_result('knn')
-#     print_nb('nb')
-#     print_nb('decsiontree')
+    print_nb('nb')
+    print_nb('decsiontree')
