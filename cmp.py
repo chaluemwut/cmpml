@@ -218,7 +218,6 @@ class CmpMl(object):
                     data_rec.append(fsc)
                     data_rec.append(total_time)
                     data_rec.append(len(y_pred))
-                    data_rec.append(self.get_model_parameter(ml_c))
                 all_data_rec.append(data_rec)
             result[dataset_name] = all_data_rec
         pickle.dump(result, open('result/{}.obj'.format(self.ml_name), 'wb'))
@@ -281,10 +280,10 @@ def maincmp(ml_name, dataset_name):
     initlog()
     log.info('start')
     cmpml = CmpMl(ml_name, dataset_name)
-    cmpml.process_dataset()
+    cmpml.process()
     log.info('end')
 
 if __name__ == '__main__':
     ml_name = sys.argv[1]
-    dataset_name = sys.argv[2]
+    dataset_name = 'off'
     maincmp(ml_name, dataset_name)
