@@ -180,6 +180,23 @@ class CmpMl(object):
         elif self.ml_name == 'svm':
             params = ml_org.get_params()
             return 'kernel = {} degree'.format(params['kernel'], params['degree'])
+
+    def remove_by_chi2_process(self, x, y):
+        from sklearn.feature_selection import  SelectKBest, f_classif
+        chi2 = SelectKBest(f_classif, k=3)
+        x_train = chi2.fit_transform(x, y)
+        result_idx = []
+        feature_len = len(x[0])
+        for i in range(0, feature_len):
+            column_data = x[:, i]
+            if  np.array_equal(column_data, x_train[:, 0]):
+                result_idx.append(i)
+            if  np.array_equal(column_data, x_train[:, 1]):
+                result_idx.append(i)
+            if  np.array_equal(column_data, x_train[:, 2]):
+                result_idx.append(i)
+        x = np.delete(x, result_idx, axis=1)
+        return x, y
      
     def process(self):
         dataset_lst = self.load_dataset()
@@ -189,6 +206,7 @@ class CmpMl(object):
             data_value = dataset_lst[dataset_name]
             x_data = data_value[0]
             y_data = data_value[1]
+            x_data, y_data = self.remove_by_chi2_process(x_data, y_data)
             all_data_rec = []
             for i in range(0, Config.reperating_loop):
                 ran_num = random.randint(1, 100)
