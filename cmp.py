@@ -248,6 +248,7 @@ class CmpMl(object):
         data_value = dataset_lst[self.dataset_name]
         x_data = data_value[0]
         y_data = data_value[1]
+        x_data, y_data = self.remove_by_chi2_process(x_data, y_data)
         all_data_rec = []
         for i in range(0, Config.reperating_loop):
             log.info('*********** loop : {}'.format(i))
@@ -299,10 +300,10 @@ def maincmp(ml_name, dataset_name):
     initlog()
     log.info('start')
     cmpml = CmpMl(ml_name, dataset_name)
-    cmpml.process()
+    cmpml.process_dataset()
     log.info('end')
 
 if __name__ == '__main__':
     ml_name = sys.argv[1]
-    dataset_name = 'off'
+    dataset_name = sys.argv[2]
     maincmp(ml_name, dataset_name)
