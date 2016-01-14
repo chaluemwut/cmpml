@@ -55,12 +55,30 @@ def print_nb(ml_name):
         print np.mean(data_lst[:, 0]), ',', np.mean(data_lst[:, 1])
         print np.mean(data_lst[:, 5]), ',', np.mean(data_lst[:, 6])
         print np.mean(data_lst[:, 10]), ',', np.mean(data_lst[:, 11])
-              
+
+def print_missing(ml):
+    import cmp
+    data_set_name = ['heart', 'letter', 'austra', 'german', 'sat', 'segment', 'vehicle']
+    for d_name in data_set_name:
+        file_name = 'all_result/missing/{}_{}.obj'.format(ml, d_name)
+        obj = pickle.load(open(file_name, 'rb'))
+        data_lst = np.array(obj[d_name])
+#         print np.mean(data_lst[:, 0]), ',', np.mean(data_lst[:, 1]), ',', np.mean(data_lst[:, 5]), ',', np.mean(data_lst[:, 6]), ',', np.mean(data_lst[:, 10]), ',', np.mean(data_lst[:, 11])
+        print np.mean(np.array(data_lst[:, 0], dtype='float')), ',', np.mean(np.array(data_lst[:, 1], dtype='float')),',',np.mean(np.array(data_lst[:, 5], dtype='float')), ',', np.mean(np.array(data_lst[:, 6], dtype='float')),',', np.mean(np.array(data_lst[:, 10], dtype='float')), ',', np.mean(np.array(data_lst[:, 11], dtype='float'))          
+
+        
 if __name__ == '__main__':
+#     file_name = 'all_result/missing/{}_{}.obj'.format('bagging', 'heart')
+#     obj = pickle.load(open(file_name, 'rb'))
+#     obj_arr = np.array(obj['heart'])
+#     print np.mean(obj_arr[:,0])
+    
+    print_missing('svm')
+    
 #     print_result('bagging')
 #     print_result('boosted')
 #     print_result('randomforest')
 #     print_result('svm')
-    print_result('knn')
+#     print_result('knn')
 #     print_nb('nb')
 #     print_nb('decsiontree')
