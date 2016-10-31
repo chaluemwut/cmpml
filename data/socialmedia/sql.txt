@@ -1,0 +1,5 @@
+select rating,is_location,share,comment,like_number,vdo,image,url,tags_number 
+from feature_model into outfile '/tmp/sm1.txt' fields terminated by ',';
+
+select cred_value,likes,shares,comments,hashtags,images,vdo,url,word_in_dict,word_outside_dict,num_of_number_in_sentense,app_sender,share_with_location,share_with_non_location,tag_with,feeling_status,share_public,word_count,character_length,question_mark,exclamation_mark 
+from training_data into outfile '/tmp/sm2.txt' fields terminated by ',';
