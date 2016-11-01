@@ -41,6 +41,19 @@ class DataSetLoader(object):
         y = self.reshape_y(data[:, [0]])
         return x, y
     
+    def get_y_social(self, data):
+        attr = len(data[0])
+        r = range(1, attr - 1)
+        x = data[:, r]
+        y = self.reshape_y(data[:, [0]])
+        y_new = []
+        for y_i in y:
+            if y_i > 5:
+                y_new.append(1)
+            else:
+                y_new.append(0)
+        return x, y_new
+        
     def svm_shuttle(self, data_set_name):
         shuttle = self.template_load(data_set_name)
 #         uni_shuttle = np.unique(shuttle)
@@ -82,7 +95,7 @@ class DataSetLoader(object):
         x_vechicle, y_vechicle = self.get_y_last(vechicle)
         
         social = self.template_load('data/socialmedia/sm1.txt')
-        x_social, y_social = self.get_y_first(social)
+        x_social, y_social = self.get_y_social(social)
         
         return {'social':[x_social, y_social]}
     

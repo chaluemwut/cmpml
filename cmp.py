@@ -131,6 +131,16 @@ class CmpMl(object):
             elif d_size == 0.25:
                 # rng = range(2, 111)
                 rng = range(2, 450)
+        elif dataset_name == 'social':
+            if d_size == 0.75:
+                # rng = range(2, 114)
+                rng = range(2, 300)
+            elif d_size == 0.5:
+                # rng = range(2, 230)
+                rng = range(2, 800)
+            elif d_size == 0.25:
+                # rng = range(2, 345)
+                rng = range(2, 1100)
 
         for i in rng:
             knn_lst.append(KNeighborsClassifier(n_neighbors=i))
@@ -306,4 +316,4 @@ def maincmp(ml_name, dataset_name):
 if __name__ == '__main__':
     ml_name = sys.argv[1]
     dataset_name = sys.argv[2]
-    maincmp(ml_name, dataset_name)
+    maincmp('decsiontree', 'social')
