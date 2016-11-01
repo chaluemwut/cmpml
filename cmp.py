@@ -316,4 +316,4 @@ def maincmp(ml_name, dataset_name):
 if __name__ == '__main__':
     ml_name = sys.argv[1]
     dataset_name = sys.argv[2]
-    maincmp('decsiontree', 'social')
+    maincmp(ml_name, dataset_name)
